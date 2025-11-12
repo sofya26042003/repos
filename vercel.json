@@ -1,6 +1,6 @@
 {
 "version": 2,
-"name": "music-album",
+"name": "hometask_01",
 "builds": [
 { "src": "api/videos.js", "use": "@vercel/node" }
 ],
