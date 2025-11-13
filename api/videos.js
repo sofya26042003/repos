@@ -139,6 +139,10 @@ app.put('/hometask_01/api/videos/:id', (req, res) => {
     res.send(video);
 });
 
+app.get('/', (req, res) => {
+    res.json({ message: 'Video API is working!' });
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
