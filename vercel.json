@@ -5,8 +5,6 @@
 { "src": "api/videos.js", "use": "@vercel/node" }
 ],
 "routes": [
-{ "src": "/(.*)", "dest": "api/vids.js" }
+{ "src": "/(.*)", "dest": "/" }
 ]
 }
-
-{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
