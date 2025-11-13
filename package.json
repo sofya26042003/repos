@@ -1,4 +1,9 @@
 {
+  "main": "api/videos.js",
+  "scripts": {
+    "start": "node api/videos.js",
+    "dev": "nodemon api/videos.js"
+  },
   "dependencies": {
     "express": "^5.1.0"
   },
