@@ -1,9 +1,9 @@
 {
   "type": "module",
-  "main": "api/videos.js",
+  "main": "api/videos.js", 
   "scripts": {
-    "start": "node api/videos.js",
-    "dev": "nodemon api/videos.js"
+    "start": "node api/videos.js", 
+    "dev": "nodemon api/videos.js"  
   },
   "dependencies": {
     "express": "^4.18.2"

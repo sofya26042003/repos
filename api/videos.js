@@ -28,30 +28,36 @@ function isValidDate(dateString) {
 function validateVideoInput(body, isUpdate = false) {
     const errors = [];
 
-    // Проверка title
+    // Проверка title - ИСПРАВЛЕННАЯ
     if (!isUpdate && !body.title) {
         errors.push({ message: 'Title is required', field: 'title' });
-    } else if (body.title && (typeof body.title !== 'string' || body.title.trim().length > MAX_TITLE_LENGTH)) {
-        errors.push({ message: `Title must be a string under ${MAX_TITLE_LENGTH} characters`, field: 'title' });
+    } else if (body.title !== undefined) { // ? ИЗМЕНИТЬ условие
+        if (typeof body.title !== 'string' || body.title.trim().length > MAX_TITLE_LENGTH || body.title.trim().length === 0) {
+            errors.push({ message: `Title must be a string under ${MAX_TITLE_LENGTH} characters`, field: 'title' });
+        }
     }
 
-    // Проверка author
+    // Проверка author - ИСПРАВЛЕННАЯ  
     if (!isUpdate && !body.author) {
         errors.push({ message: 'Author is required', field: 'author' });
-    } else if (body.author && (typeof body.author !== 'string' || body.author.trim().length > MAX_AUTHOR_LENGTH)) {
-        errors.push({ message: `Author must be a string under ${MAX_AUTHOR_LENGTH} characters`, field: 'author' });
+    } else if (body.author !== undefined) { // ? ИЗМЕНИТЬ условие
+        if (typeof body.author !== 'string' || body.author.trim().length > MAX_AUTHOR_LENGTH || body.author.trim().length === 0) {
+            errors.push({ message: `Author must be a string under ${MAX_AUTHOR_LENGTH} characters`, field: 'author' });
+        }
     }
 
     // Проверка availableResolutions
-    if (body.availableResolutions) {
+    if (body.availableResolutions !== undefined) { // ? ИЗМЕНИТЬ условие
         if (!Array.isArray(body.availableResolutions) || !isValidResolution(body.availableResolutions)) {
             errors.push({ message: `Invalid resolutions. Allowed: ${RESOLUTIONS.join(', ')}`, field: 'availableResolutions' });
         }
     }
 
     // Проверка canBeDownloaded
-    if (body.canBeDownloaded && typeof body.canBeDownloaded !== 'boolean') {
-        errors.push({ message: 'canBeDownloaded must be boolean', field: 'canBeDownloaded' });
+    if (body.canBeDownloaded !== undefined) { // ? ИЗМЕНИТЬ условие
+        if (typeof body.canBeDownloaded !== 'boolean') {
+            errors.push({ message: 'canBeDownloaded must be boolean', field: 'canBeDownloaded' });
+        }
     }
 
     // Проверка minAgeRestriction
@@ -62,8 +68,10 @@ function validateVideoInput(body, isUpdate = false) {
     }
 
     // Проверка publicationDate (только для обновления)
-    if (isUpdate && body.publicationDate && !isValidDate(body.publicationDate)) {
-        errors.push({ message: 'publicationDate must be valid ISO date', field: 'publicationDate' });
+    if (isUpdate && body.publicationDate !== undefined) { // ? ИЗМЕНИТЬ условие
+        if (!isValidDate(body.publicationDate)) {
+            errors.push({ message: 'publicationDate must be valid ISO date', field: 'publicationDate' });
+        }
     }
 
     return errors;
@@ -134,14 +142,14 @@ app.put('/videos/:id', (req, res) => {
     if (errors.length > 0) return res.status(400).send({ errorsMessages: errors });
 
     // Обновление полей
-    if (req.body.title) video.title = req.body.title;
-    if (req.body.author) video.author = req.body.author;
-    if (req.body.availableResolutions) video.availableResolutions = req.body.availableResolutions;
+    if (req.body.title !== undefined) video.title = req.body.title;
+    if (req.body.author !== undefined) video.author = req.body.author;
+    if (req.body.availableResolutions !== undefined) video.availableResolutions = req.body.availableResolutions;
     if (req.body.canBeDownloaded !== undefined) video.canBeDownloaded = req.body.canBeDownloaded;
     if (req.body.minAgeRestriction !== undefined) video.minAgeRestriction = req.body.minAgeRestriction;
-    if (req.body.publicationDate) video.publicationDate = new Date(req.body.publicationDate).toISOString();
+    if (req.body.publicationDate !== undefined) video.publicationDate = new Date(req.body.publicationDate).toISOString();
 
-    res.send(video);
+    res.sendStatus(204);
 });
 
 app.get('/', (req, res) => {
