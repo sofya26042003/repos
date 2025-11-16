@@ -122,6 +122,14 @@ app.delete('/testing/all-data', (req, res) => {
 });
 
 app.post('/videos', (req, res) => {
+    // Триммируем строки перед валидацией
+    if (req.body.title && typeof req.body.title === 'string') {
+        req.body.title = req.body.title.trim();
+    }
+    if (req.body.author && typeof req.body.author === 'string') {
+        req.body.author = req.body.author.trim();
+    }
+
     const errors = validateVideoInput(req.body);
     if (errors.length > 0) return res.status(400).send({ errorsMessages: errors });
 
@@ -132,7 +140,7 @@ app.post('/videos', (req, res) => {
         canBeDownloaded: req.body.canBeDownloaded || false,
         minAgeRestriction: req.body.minAgeRestriction || null,
         createdAt: new Date().toISOString(),
-        publicationDate: new Date(Date.now() + 86400000).toISOString(), // +1 день
+        publicationDate: new Date(Date.now() + 86400000).toISOString(),
         availableResolutions: req.body.availableResolutions || []
     };
 
@@ -141,6 +149,14 @@ app.post('/videos', (req, res) => {
 });
 
 app.put('/videos/:id', (req, res) => {
+    // Триммируем строки перед валидацией
+    if (req.body.title && typeof req.body.title === 'string') {
+        req.body.title = req.body.title.trim();
+    }
+    if (req.body.author && typeof req.body.author === 'string') {
+        req.body.author = req.body.author.trim();
+    }
+
     const video = videos.find(v => v.id === +req.params.id);
     if (!video) return res.sendStatus(404);
 
