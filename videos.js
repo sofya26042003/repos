@@ -1,5 +1,4 @@
-//const express = require('express');
-import express from 'express'
+import express from 'express';
 const app = express();
 const port = process.env.PORT || 4008;
 
@@ -78,18 +77,18 @@ let videos = [
     }
 ];
 
-// Ðîóòû
-app.get('/hometask_01/api/videos', (req, res) => {
+// Ðîóòû (ÁÅÇ ÏÐÅÔÈÊÑÎÂ!)
+app.get('/videos', (req, res) => {
     res.send(videos);
 });
 
-app.get('/hometask_01/api/videos/:id', (req, res) => {
+app.get('/videos/:id', (req, res) => {
     const video = videos.find(v => v.id === +req.params.id);
     if (!video) return res.sendStatus(404);
     res.send(video);
 });
 
-app.delete('/hometask_01/api/videos/:id', (req, res) => {
+app.delete('/videos/:id', (req, res) => {
     const index = videos.findIndex(v => v.id === +req.params.id);
     if (index === -1) return res.sendStatus(404);
     
@@ -97,12 +96,12 @@ app.delete('/hometask_01/api/videos/:id', (req, res) => {
     res.sendStatus(204);
 });
 
-app.delete('/hometask_01/api/testing/all-data', (req, res) => {
+app.delete('/testing/all-data', (req, res) => {
     videos = [];
     res.sendStatus(204);
 });
 
-app.post('/hometask_01/api/videos', (req, res) => {
+app.post('/videos', (req, res) => {
     const errors = validateVideoInput(req.body);
     if (errors.length > 0) return res.status(400).send({ errorsMessages: errors });
 
@@ -121,7 +120,7 @@ app.post('/hometask_01/api/videos', (req, res) => {
     res.status(201).send(newVideo);
 });
 
-app.put('/hometask_01/api/videos/:id', (req, res) => {
+app.put('/videos/:id', (req, res) => {
     const video = videos.find(v => v.id === +req.params.id);
     if (!video) return res.sendStatus(404);
 
@@ -140,7 +139,17 @@ app.put('/hometask_01/api/videos/:id', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Video API is working!' });
+    res.json({ 
+        message: 'Video API is working!',
+        endpoints: [
+            'GET /videos',
+            'GET /videos/:id', 
+            'POST /videos',
+            'PUT /videos/:id',
+            'DELETE /videos/:id',
+            'DELETE /testing/all-data'
+        ]
+    });
 });
 
 app.listen(port, () => {
