@@ -22,39 +22,44 @@ function isValidResolution(resolutions) {
 }
 
 function isValidDate(dateString) {
-    return !isNaN(Date.parse(dateString));
+    // Проверяем, что это строка и это валидная дата
+    if (typeof dateString !== 'string') return false;
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
 }
 
 function validateVideoInput(body, isUpdate = false) {
     const errors = [];
 
-    // Проверка title - ИСПРАВЛЕННАЯ
+    // Проверка title
     if (!isUpdate && !body.title) {
         errors.push({ message: 'Title is required', field: 'title' });
-    } else if (body.title !== undefined) { // ? ИЗМЕНИТЬ условие
-        if (typeof body.title !== 'string' || body.title.trim().length > MAX_TITLE_LENGTH || body.title.trim().length === 0) {
+    } else if (body.title !== undefined) {
+        // Добавляем проверку на null и пустую строку
+        if (body.title === null || typeof body.title !== 'string' || body.title.trim().length === 0 || body.title.trim().length > MAX_TITLE_LENGTH) {
             errors.push({ message: `Title must be a string under ${MAX_TITLE_LENGTH} characters`, field: 'title' });
         }
     }
 
-    // Проверка author - ИСПРАВЛЕННАЯ  
+    // Проверка author  
     if (!isUpdate && !body.author) {
         errors.push({ message: 'Author is required', field: 'author' });
-    } else if (body.author !== undefined) { // ? ИЗМЕНИТЬ условие
-        if (typeof body.author !== 'string' || body.author.trim().length > MAX_AUTHOR_LENGTH || body.author.trim().length === 0) {
+    } else if (body.author !== undefined) {
+        // Добавляем проверку на null и пустую строку
+        if (body.author === null || typeof body.author !== 'string' || body.author.trim().length === 0 || body.author.trim().length > MAX_AUTHOR_LENGTH) {
             errors.push({ message: `Author must be a string under ${MAX_AUTHOR_LENGTH} characters`, field: 'author' });
         }
     }
 
     // Проверка availableResolutions
-    if (body.availableResolutions !== undefined) { // ? ИЗМЕНИТЬ условие
+    if (body.availableResolutions !== undefined) {
         if (!Array.isArray(body.availableResolutions) || !isValidResolution(body.availableResolutions)) {
             errors.push({ message: `Invalid resolutions. Allowed: ${RESOLUTIONS.join(', ')}`, field: 'availableResolutions' });
         }
     }
 
     // Проверка canBeDownloaded
-    if (body.canBeDownloaded !== undefined) { // ? ИЗМЕНИТЬ условие
+    if (body.canBeDownloaded !== undefined) {
         if (typeof body.canBeDownloaded !== 'boolean') {
             errors.push({ message: 'canBeDownloaded must be boolean', field: 'canBeDownloaded' });
         }
@@ -67,9 +72,10 @@ function validateVideoInput(body, isUpdate = false) {
         }
     }
 
-    // Проверка publicationDate (только для обновления)
-    if (isUpdate && body.publicationDate !== undefined) { // ? ИЗМЕНИТЬ условие
-        if (!isValidDate(body.publicationDate)) {
+    // ИСПРАВЛЕННАЯ проверка publicationDate
+    if (isUpdate && body.publicationDate !== undefined) {
+        // Проверяем тип и валидность даты
+        if (typeof body.publicationDate !== 'string' || !isValidDate(body.publicationDate)) {
             errors.push({ message: 'publicationDate must be valid ISO date', field: 'publicationDate' });
         }
     }
