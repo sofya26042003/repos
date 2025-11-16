@@ -9,6 +9,12 @@ const MAX_AUTHOR_LENGTH = 20;
 
 // Middleware
 app.use(express.json());
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 
 // Вспомогательные функции
 function isValidResolution(resolutions) {
@@ -152,6 +158,12 @@ app.get('/', (req, res) => {
     });
 });
 
+app.options('*', (req, res) => {
+    res.sendStatus(200);
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
+export default app;
